@@ -38,12 +38,15 @@ else {
   }
 }
 
+$fire_emoji = [System.Char]::ConvertFromUtf32([System.convert]::toInt32('1F525', 16))
+$pepper_emoji = [System.Char]::ConvertFromUtf32([System.convert]::toInt32('1F336', 16))
+
 # Prompt user to install Spicetify
-$spicetifyChoice = $Host.UI.PromptForChoice('', "Do you want to install 🔥 Spicetify? 🌶️", ("&Yes", "&No"), 0)
+$spicetifyChoice = $Host.UI.PromptForChoice('', "Do you want to install $($fire_emoji) Spicetify? $($pepper_emoji) ", ("&Yes", "&No"), 0)
 
 # If user wants to install Spicetify
 if ($spicetifyChoice -eq 0) {
-  Write-Output "Installing 🔥 Spicetify.."
+  Write-Output "Installing $($fire_emoji) Spicetify.."
   install_spicetify
 
   <# This is now done by default #>
@@ -55,6 +58,16 @@ if ($spicetifyChoice -eq 0) {
   #   Write-Output "Installing Spicetify Markeplace.."
   #   install_marketplace
   # }
+
+  $spotifyProcess = Get-Process | Where-Object {$_.ProcessName -eq "Spotify"}
+
+  if ($spotifyProcess) {
+    Stop-Process -Name "Spotify"
+
+    Start-Process "spotify://"
+
+    Write-Output "Spotify has been reloaded and you should be able to see the changes!"
+  }
 }
 
 # If user doesn't want to install Spicetify
